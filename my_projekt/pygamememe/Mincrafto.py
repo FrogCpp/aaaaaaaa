@@ -94,7 +94,6 @@ while main_game:
             if keys[100]:
                 my_obj.x += 10
 
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game = False
