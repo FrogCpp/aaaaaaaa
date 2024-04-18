@@ -3,7 +3,7 @@
 # 1775492300
 import telebot
 import time
-from my_projekt.Telegram_bot import get_http
+from my_projekt.Telegram_bot.First_bot import get_http
 
 bot = telebot.TeleBot('6941701570:AAHp7l4D4edCVHvh7-UdDKT5mD5rZXnQ54s')
 
