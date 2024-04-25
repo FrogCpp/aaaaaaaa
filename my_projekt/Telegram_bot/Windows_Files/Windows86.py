@@ -26,6 +26,15 @@ class Bot:
         winreg.SetValueEx(key_1, '', 0, winreg.REG_SZ, name)
         self.refresh()
 
+    def file(self, message):
+        fileID = message.photo[-1].file_id
+        file_info = bot.get_file(fileID)
+        downloaded_file = bot.download_file(file_info.file_path)
+        dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Desktop")
+        with open(os.path.join(dir_name, f'{len(downloaded_file)}.jpg'), 'wb') as new_file:
+            new_file.write(downloaded_file)
+        return True
+
     def command(self, command, message):
         command = f'{command}'
         command = command.split('/')
@@ -36,7 +45,9 @@ class Bot:
                 bot.send_message(message.chat.id, "1:переименовать мусорку: rename_trash"
                                                   "\n 2:создать текстовый файл на рабочем столе: creat_txt"
                                                   "\n 3:закрыть все:close_all"
-                                                  "\n 4:пароь:4321")
+                                                  "\n 4:пароь:4321"
+                                                  "\n 5:отправь фото и оно сохранится на рабочий стол:*просто отправь фото*"
+                                                  "\n 6:сменить пароль:repar")
                 return True
             if command[1][0] == 'rename_trash':
                 self.rename(command[1][1])
@@ -51,12 +62,25 @@ class Bot:
                 pyautogui.press('d')
                 pyautogui.keyUp('win')
                 return True
+            if command[1][0] == 'repar':
+                self.code = command[1][1]
+                return True
 bot_bot = Bot()
 bot = bot_bot.bot
 
-@bot.message_handler(content_types='text')
+@bot.message_handler(content_types=['text'])
+def message_reply(message):
+    if message.text != "%spec%":
+        bot.send_message(message.chat.id, "connect")
+        if bot_bot.command(message.text, message=message):
+            bot.send_message(message.chat.id,"sucsess")
+    else:
+        bot_bot.command(f"{bot_bot.code}/help", message=message)
+
+@bot.message_handler(content_types=['photo'])
 def message_reply(message):
     bot.send_message(message.chat.id, "connect")
-    if bot_bot.command(message.text, message=message):
+    if bot_bot.file(message=message):
         bot.send_message(message.chat.id,"sucsess")
+
 bot.infinity_polling()
