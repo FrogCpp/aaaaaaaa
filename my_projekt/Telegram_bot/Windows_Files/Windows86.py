@@ -10,7 +10,13 @@ class Bot:
         self.trash = '645FF040-5081-101B-9F08-00AA002F954E'
 
     def refresh(self):
+        pyautogui.keyDown('win')
+        pyautogui.press('d')
         pyautogui.press('f5')
+        pyautogui.keyUp('win')
+        pyautogui.keyDown('win')
+        pyautogui.press('d')
+        pyautogui.keyUp('win')
 
     def rename(self, name):
         location = winreg.HKEY_CURRENT_USER
@@ -27,7 +33,10 @@ class Bot:
         if command[0] != self.code: return False
         else:
             if command[1][0] == 'help':
-                bot.send_message(message.chat.id, "1:переименовать мусорку: rename_trash\n 2:создать текстовый файл на рабочем столе: creat_txt\n 3:пароь:4321")
+                bot.send_message(message.chat.id, "1:переименовать мусорку: rename_trash"
+                                                  "\n 2:создать текстовый файл на рабочем столе: creat_txt"
+                                                  "\n 3:закрыть все:close_all"
+                                                  "\n 4:пароь:4321")
                 return True
             if command[1][0] == 'rename_trash':
                 self.rename(command[1][1])
@@ -36,6 +45,11 @@ class Bot:
                 dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Desktop")
                 f = open(os.path.join(dir_name, f'{command[1][1]}.txt'), 'w')
                 f.close()
+                return True
+            if command[1][0] == 'close_all':
+                pyautogui.keyDown('win')
+                pyautogui.press('d')
+                pyautogui.keyUp('win')
                 return True
 bot_bot = Bot()
 bot = bot_bot.bot
