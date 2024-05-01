@@ -3,7 +3,6 @@ import os
 import winreg
 import pyautogui
 import time
-import PIL
 
 class Bot:
     def __init__(self, bot=telebot.TeleBot('6941701570:AAHp7l4D4edCVHvh7-UdDKT5mD5rZXnQ54s')):
@@ -97,27 +96,6 @@ class Bot:
                 return True
             if command[1][0] == 'screen':
                 return self.screen(message)
-            if command[1][0] == 'draw_screen':
-                pyautogui.keyDown('win')
-                pyautogui.press('printscreen')
-                pyautogui.keyUp('win')
-                time.sleep(5)
-                dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Pictures\\Screenshots")
-                filse = os.listdir(dir_name)
-                for i in filse:
-                    if i.find('Снимок экрана') != -1:
-                        way = os.path.join(dir_name, i)
-                        im = PIL.Image.open(way)
-                        print(im)
-                        draw = PIL.ImageDraw.Draw(im)
-                        pos = pyautogui.position()
-                        print(pos[0], pos[1])
-                        draw.ellipse((pos[0], pos[1], 50, 50), fill='red', outline=(0, 0, 0))
-                        im.save(i)
-                        bot.send_photo(message.chat.id, open(way), 'rb')
-                        os.remove(os.path.join(dir_name, i))
-                        break
-
 
 bot_bot = Bot()
 bot = bot_bot.bot
