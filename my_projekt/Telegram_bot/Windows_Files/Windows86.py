@@ -29,19 +29,12 @@ class Bot:
         pyautogui.keyUp('win')
 
     def screen(self, message):
-        pyautogui.keyDown('win')
-        pyautogui.press('printscreen')
-        pyautogui.keyUp('win')
-        time.sleep(5)
         dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Pictures\\Screenshots")
-        filse = os.listdir(dir_name)
-        for i in filse:
-            if i.find('Снимок экрана') != -1:
-                bot.send_photo(message.chat.id, open(os.path.join(dir_name, i), 'rb'))
-                os.remove(os.path.join(dir_name, i))
-                break
+        print(dir_name)
+        pyautogui.screenshot(f'{dir_name}\\screen.png')
+        bot.send_photo(message.chat.id, open(os.path.join(dir_name, 'screen.png'), 'rb'))
+        os.remove(os.path.join(dir_name, 'screen.png'))
         return True
-
 
     def rename(self, name):
         location = winreg.HKEY_CURRENT_USER
