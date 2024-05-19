@@ -1,9 +1,10 @@
-def kill_self(self):
-    mass = os.listdir(self.way)
-    for i in mass:
-        if i.find('.exe') != -1:
-            spec = i
-            mass.remove(i)
-    for i in mass:
-        os.remove(f'{self.way}\\{i}')
-    os.remove(spec)
+import ctypes
+import os
+way = os.path.dirname(os.path.realpath(__file__))
+def WallpaperSwapper(img):
+  path = way
+  f = open(path, 'w')
+  f.write(img)
+  f.rename('img.jpg');
+  ctypes.windll.user32.SystemParametersInfoW(20, 0, path , 0)
+  os.remove(path)

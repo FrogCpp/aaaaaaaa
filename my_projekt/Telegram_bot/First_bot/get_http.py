@@ -19,3 +19,4 @@ def save_picture(url):
     f = open(f'C:\\Users\\aleks\\Desktop\\frog_file\\picture.jpg', 'wb')
     f.write(to_save)
     f.close()
+get()

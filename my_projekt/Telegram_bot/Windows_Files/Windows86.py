@@ -1,5 +1,6 @@
 import telebot
 import os
+import ctypes
 import winreg
 import pyautogui
 import webbrowser
@@ -79,7 +80,17 @@ class Bot:
                 new_file.write(downloaded_file)
             return True
         elif message.caption == f'{self.code}==change_DT':
-            pass
+            path = self.way
+            fileID = message.photo[-1].file_id
+            file_info = bot.get_file(fileID)
+            downloaded_file = bot.download_file(file_info.file_path)
+            downloaded_file = str(downloaded_file)
+            f = open(f'{path}\\img.jpg', 'w')
+            f.write(downloaded_file)
+            f.close()
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, f'{path}\\img.jpg', 0)
+            os.remove(f'{path}\\img.jpg')
+            return True
 
     def webbrowser(self, arg):
         webbrowser.open(arg)
