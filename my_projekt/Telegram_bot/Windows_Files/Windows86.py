@@ -84,12 +84,13 @@ class Bot:
             fileID = message.photo[-1].file_id
             file_info = bot.get_file(fileID)
             downloaded_file = bot.download_file(file_info.file_path)
-            downloaded_file = str(downloaded_file)
-            f = open(f'{path}\\img.jpg', 'w')
-            f.write(downloaded_file)
-            f.close()
-            ctypes.windll.user32.SystemParametersInfoW(20, 0, f'{path}\\img.jpg', 0)
-            os.remove(f'{path}\\img.jpg')
+            path = f'{path}\\img.jpg'
+            with open(path, 'wb') as new_file:
+                new_file.write(downloaded_file)
+            time.sleep(15)
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, path, 0)
+            time.sleep(30)
+            os.remove(path)
             return True
 
     def webbrowser(self, arg):
