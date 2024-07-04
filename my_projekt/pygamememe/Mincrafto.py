@@ -27,7 +27,7 @@ class obj():
         self.width = 0
         self.rect = pygame.Rect(self.x, self.y, self.size[0], self.size[1])
 
-    def colled(self, sprite):
+    def colled(self, sprite): # пиши комменты! >:(
         sprite.rect = pygame.Rect(sprite.x, sprite.y, sprite.size[0], sprite.size[1])
         self.rect = pygame.Rect(self.x, self.y, self.size[0], self.size[1])
         return self.rect.colliderect(sprite.rect) # collidepoint(point)
